@@ -1,0 +1,60 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:security="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+
+    <!-- Enable the method security to use the
+     @PreAuthorize, @PreFilter, @PostAuthorize and @PostFilter annotations
+     in methods and secure it.
+-->
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
+
+    <!-- secure the application´s urls with the specific Role -->
+    <http security="none" pattern="/resources/**"/>
+    <http security="none" pattern="/rtvSensorData/**"/>
+    <http auto-config="false" use-expressions="true">
+        <csrf disabled="true"/>
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/static/**" access="permitAll"/>
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/logout" access="permitAll"/>
+        <intercept-url pattern="/signup" access="permitAll"/>
+        <!--<intercept-url pattern="/rtvSensorData/**" access="hasRole('ROLE_USER')"/>-->
+        <intercept-url pattern="/search" access="permitAll"/>
+        <intercept-url pattern="/monitor" access="permitAll"/>
+        <intercept-url pattern="/monitorsensor" access="permitAll"/>
+        <intercept-url pattern="/sensorMgn" access="permitAll"/>
+        <!--<intercept-url pattern="/search" access="hasRole('ROLE_USER')"/>-->
+        <!--<intercept-url pattern="/monitor" access="hasRole('ROLE_ADMIN')"/>-->
+        <!--<intercept-url pattern="/sensorMgn" access="hasRole('ROLE_ADMIN')"/>-->
+        <logout
+                logout-success-url="/"
+                logout-url="/logout"
+                />
+        <form-login
+                authentication-failure-url="/login?error"
+                login-page="/login"
+                login-processing-url="/login"
+                password-parameter="password"
+                username-parameter="name"
+                authentication-success-handler-ref="customSuccessHandler"
+                />
+        <logout logout-success-url="/logout"/>
+    </http>
+
+    <!-- Define the application authentication manager to use a custom Class (mongoUserDetailsService)
+         to validate the user access, and the password enconding -->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="authenticationServices">
+            <password-encoder ref="encoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="customSuccessHandler" class="com.springapp.mvc.sensorService.CustomSuccessHandler" />
+
+</beans:beans>

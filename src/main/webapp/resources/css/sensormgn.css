@@ -1,0 +1,12 @@
+.table_div{
+    height: 450px;
+    overflow: auto;
+    border-bottom: solid;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    color: #e7e7e7;
+    font-size: 16px;
+    background-color:  #337ab7;
+    border:2px solid 337ab7;
+}
